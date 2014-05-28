@@ -1,0 +1,20 @@
+.encryptedpasswords {
+    position: relative;
+    display: inline-block;
+    background-color: #eee;
+    padding: 0 3px;
+}
+
+.encryptedpasswords .recrypt {
+    display: none;
+    font-size: 80%;
+    color: #888 !important;
+}
+
+.encryptedpasswords .recrypt a {
+    color: #888 !important;
+}
+
+.encryptedpasswords:hover .recrypt {
+    display: inline;
+}
