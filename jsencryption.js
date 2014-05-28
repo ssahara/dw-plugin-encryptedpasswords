@@ -26,7 +26,11 @@ function addBtnActionClick(btn, props, edid)
 {
     jQuery(btn).click(function(){
         var sample = '';
-        var selection = getSelection(document.getElementById('wiki__text'));
+        if (typeof DWgetSelection == 'function') {
+            var selection = DWgetSelection(document.getElementById('wiki__text'));
+        } else {
+            var selection = getSelection(document.getElementById('wiki__text'));
+        }
         if (selection.getLength()) {
             sample = selection.getText();
         }
