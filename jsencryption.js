@@ -129,7 +129,7 @@ function decrypt(a) {
             try {
                 var e = GibberishAES.dec(d, a);
                 b = true;
-                jQuery(c).html(e + ' <span class="recrypt"><a href="." onclick="location.reload(); return false;">['+enc_recrypt+']</a></span>');
+                jQuery(c).text(e).after(' <span class="recrypt"><a href="." onclick="location.reload(); return false;">['+enc_recrypt+']</a></span>');
                 c.title = "";
             } catch(err) {}
         }
