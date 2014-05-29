@@ -48,5 +48,10 @@ class action_plugin_encryptedpasswords extends DokuWiki_Action_Plugin {
             "_data" => "",
             "src" => DOKU_BASE."lib/plugins/encryptedpasswords/jsencryption.js"
             );
+        $event->data["script"][] = array ("type" => "text/javascript",
+            "charset" => "utf-8",
+            "_data" => "",
+            "src" => DOKU_BASE."lib/plugins/encryptedpasswords/gibberish-aes.js"
+            );
     }
 }
