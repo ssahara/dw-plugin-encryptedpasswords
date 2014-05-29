@@ -13,20 +13,6 @@ require_once(DOKU_PLUGIN.'action.php');
 class action_plugin_encryptedpasswords extends DokuWiki_Action_Plugin {
 
     /**
-      * return some info
-      */
-    function getInfo(){
-        return array(
-            'author' => 'Wolfgang Reszel',
-            'email'  => 'reszel@werbeagentur-willers.de',
-            'date'   => '2013-03-13',
-            'name'   => 'Encrypted Passwords Plugin',
-            'desc'   => 'This plugin let you store 256 bit AES encrypted passwords in your DokuWiki pages. The password can be decrypted by clicking them (Javascript must be enabled). Based on the encryption library by Vincent Cheung (http://www.vincentcheung.ca/jsencryption) which incorporates the Gibberish AES library by Mark Percival (https://github.com/mdp/gibberish-aes).',
-            'url'    => 'http://www.dokuwiki.org/plugin:encryptedpasswords',
-        );
-    }
-
-    /**
       * Register its handlers with the DokuWiki's event controller
       */
     function register(&$controller) {
