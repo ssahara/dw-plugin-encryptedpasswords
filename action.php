@@ -16,7 +16,26 @@ class action_plugin_encryptedpasswords extends DokuWiki_Action_Plugin {
       * Register its handlers with the DokuWiki's event controller
       */
     function register(&$controller) {
+        $controller->register_hook('DOKUWIKI_STARTED', 'BEFORE', $this, '_exportToJSINFO');
         $controller->register_hook('TPL_METAHEADER_OUTPUT', 'BEFORE',  $this, '_hookjs');
+    }
+
+    /**
+     * export to JSINFO
+     */
+    function _exportToJSINFO(&$event) {
+        global $JSINFO;
+        $JSINFO['encryptedpasswords']['enc_enter']    = $this->getLang('enterKey');
+        $JSINFO['encryptedpasswords']['enc_ok']       = $this->getLang('ok');
+        $JSINFO['encryptedpasswords']['enc_ok2']      = $this->getLang('ok2');
+        $JSINFO['encryptedpasswords']['enc_cancel']   = $this->getLang('cancel');
+        $JSINFO['encryptedpasswords']['enc_encb']     = $this->getLang('encryptbutton');
+        $JSINFO['encryptedpasswords']['enc_invalid']  = $this->getLang('invalidKey');
+        $JSINFO['encryptedpasswords']['enc_nosel']    = $this->getLang('noSelection');
+        $JSINFO['encryptedpasswords']['enc_enckey']   = $this->getLang('encryptKey');
+        $JSINFO['encryptedpasswords']['enc_keyerr']   = $this->getLang('keyErr');
+        $JSINFO['encryptedpasswords']['enc_emptykey'] = $this->getLang('emptykey');
+        $JSINFO['encryptedpasswords']['enc_recrypt']  = $this->getLang('recrypt');
     }
 
     /**
@@ -25,10 +44,6 @@ class action_plugin_encryptedpasswords extends DokuWiki_Action_Plugin {
       * @author Wolfgang Reszel <reszel@werbeagentur-willers.de>
       */
     function _hookjs(&$event, $param) {
-        $event->data["script"][] = array (	"type" => "text/javascript",
-            "charset" => "utf-8",
-            "_data" => "var enc_enter='".$this->getLang('enterKey')."';var enc_ok='".$this->getLang('ok')."';var enc_ok2='".$this->getLang('ok2')."';var enc_cancel='".$this->getLang('cancel')."';var enc_encb='".$this->getLang('encryptbutton')."';var enc_cancel='".$this->getLang('cancel')."';var enc_invalid='".$this->getLang('invalidKey')."';var enc_nosel='".$this->getLang('noSelection')."';var enc_enckey='".$this->getLang('encryptKey')."';var enc_keyerr='".$this->getLang('keyErr')."';var enc_emptykey='".$this->getLang('emptyKey')."';var enc_recrypt='".$this->getLang('recrypt')."';"
-            );
         $event->data["script"][] = array ("type" => "text/javascript",
             "charset" => "utf-8",
             "_data" => "",

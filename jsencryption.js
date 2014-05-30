@@ -22,8 +22,8 @@
   */
 
 // Add a toolbar button to insert a encrypted password
-function addBtnActionClick(btn, props, edid)
-{
+function addBtnActionClick(btn, props, edid) {
+
     jQuery(btn).click(function(){
         var sample = '';
         if (typeof DWgetSelection == 'function') {
@@ -35,11 +35,11 @@ function addBtnActionClick(btn, props, edid)
             sample = selection.getText();
         }
         if (sample=='') {
-            alert(enc_nosel);
+            alert(JSINFO['encryptedpasswords']['enc_nosel']);
             return false;
         }
         if (sample.indexOf('<decrypt>') == 0 && sample.indexOf('</decrypt>') == sample.length-10) {
-            vcPrompt(enc_enter, enc_ok, 1, vcFunc = function(a) {
+            vcPrompt(JSINFO['encryptedpasswords']['enc_enter'], JSINFO['encryptedpasswords']['enc_ok'], 1, vcFunc = function(a) {
                 if (a) {
                     document.getElementById('wiki__text').focus();
                     try {
@@ -50,7 +50,7 @@ function addBtnActionClick(btn, props, edid)
                         vcClick_func(0);
                         decText = null;
                     } else {
-                        alert(enc_invalid)
+                        alert(JSINFO['encryptedpasswords']['enc_invalid'])
                     }
                 } else { 
                     vcClick_func(0);
@@ -58,14 +58,14 @@ function addBtnActionClick(btn, props, edid)
                 };
             });
         } else {
-            vcPrompt(enc_enckey, enc_ok2, 2, vcFunc = function(a) {
+            vcPrompt(JSINFO['encryptedpasswords']['enc_enckey'], JSINFO['encryptedpasswords']['enc_ok2'], 2, vcFunc = function(a) {
                 if (a) {
                     if (passElt.value !== passElt2.value) {
-                        alert(enc_keyerr);
+                        alert(JSINFO['encryptedpasswords']['enc_keyerr']);
                         return false;
                     }
                     if (passElt.value == '') {
-                        alert(enc_emptykey);
+                        alert(JSINFO['encryptedpasswords']['enc_emptykey']);
                         return false;
                     }
                     document.getElementById('wiki__text').focus();
@@ -83,14 +83,12 @@ function addBtnActionClick(btn, props, edid)
     return true;
 }
 
-function installEncryptButton()
-{
+function installEncryptButton() {
     // but first check if there is a toolbar
-    if (window.toolbar != undefined)
-    {
+    if (window.toolbar != undefined) {
         window.toolbar[window.toolbar.length] = {
                 "type":"Click", // we have a new type that links to the function
-                "title":enc_encb,
+                "title":JSINFO['encryptedpasswords']['enc_encb'],
                 "icon":"../../plugins/encryptedpasswords/encrypt.png"
         }
     }
@@ -103,7 +101,7 @@ var decryptElementId;
 function decryptText(a, b, c) {
     decryptElementId = a;
     if (b == null) {
-        b = enc_enter
+        b = JSINFO['encryptedpasswords']['enc_enter']
     }
     if (c != null && c) {
         var d = prompt(b, "");
@@ -129,12 +127,12 @@ function decrypt(a) {
             try {
                 var e = GibberishAES.dec(d, a);
                 b = true;
-                jQuery(c).text(e).after(' <span class="recrypt"><a href="." onclick="location.reload(); return false;">['+enc_recrypt+']</a></span>');
+                jQuery(c).text(e).after(' <span class="recrypt"><a href="." onclick="location.reload(); return false;">['+JSINFO['encryptedpasswords']['enc_recrypt']+']</a></span>');
                 c.title = "";
             } catch(err) {}
         }
         if (!b) {
-            alert(enc_invalid)
+            alert(JSINFO['encryptedpasswords']['enc_invalid'])
         }
     }
 }
@@ -288,7 +286,7 @@ function vcCreateDialog(a,a2,a3,vcClick) {
     var d = document.createElement("input");
     d.setAttribute("tabindex", "1003");
     d.type = "button";
-    d.value = enc_cancel;
+    d.value = JSINFO['encryptedpasswords']['enc_cancel'];
     d.onclick = function() {
         vcClick(0)
     };
@@ -299,7 +297,7 @@ function vcCreateDialog(a,a2,a3,vcClick) {
     d = document.createElement("input");
     d.setAttribute("tabindex", "1004");
     d.type = "button";
-    d.value = a2 != null ? a2 : enc_ok;
+    d.value = a2 != null ? a2 : JSINFO['encryptedpasswords']['enc_ok'];
     d.onclick = function() {
         vcClick(1)
     };
