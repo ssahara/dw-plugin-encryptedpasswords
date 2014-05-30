@@ -17,7 +17,6 @@ class action_plugin_encryptedpasswords extends DokuWiki_Action_Plugin {
       */
     function register(&$controller) {
         $controller->register_hook('DOKUWIKI_STARTED', 'BEFORE', $this, '_exportToJSINFO');
-        $controller->register_hook('TPL_METAHEADER_OUTPUT', 'BEFORE',  $this, '_hookjs');
     }
 
     /**
@@ -36,23 +35,5 @@ class action_plugin_encryptedpasswords extends DokuWiki_Action_Plugin {
         $JSINFO['encryptedpasswords']['enc_keyerr']   = $this->getLang('keyErr');
         $JSINFO['encryptedpasswords']['enc_emptykey'] = $this->getLang('emptykey');
         $JSINFO['encryptedpasswords']['enc_recrypt']  = $this->getLang('recrypt');
-    }
-
-    /**
-      * Hook js script into page headers.
-      *
-      * @author Wolfgang Reszel <reszel@werbeagentur-willers.de>
-      */
-    function _hookjs(&$event, $param) {
-        $event->data["script"][] = array ("type" => "text/javascript",
-            "charset" => "utf-8",
-            "_data" => "",
-            "src" => DOKU_BASE."lib/plugins/encryptedpasswords/jsencryption.js"
-            );
-        $event->data["script"][] = array ("type" => "text/javascript",
-            "charset" => "utf-8",
-            "_data" => "",
-            "src" => DOKU_BASE."lib/plugins/encryptedpasswords/gibberish-aes.js"
-            );
     }
 }
