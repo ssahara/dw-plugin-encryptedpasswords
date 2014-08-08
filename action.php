@@ -15,14 +15,14 @@ class action_plugin_encryptedpasswords extends DokuWiki_Action_Plugin {
     /**
       * Register its handlers with the DokuWiki's event controller
       */
-    function register(&$controller) {
+    public function register(Doku_Event_Handler $controller) {
         $controller->register_hook('DOKUWIKI_STARTED', 'BEFORE', $this, '_exportToJSINFO');
     }
 
     /**
      * export to JSINFO
      */
-    function _exportToJSINFO(&$event) {
+    public function _exportToJSINFO(&$event) {
         global $JSINFO;
         $JSINFO['encryptedpasswords']['enc_enter']    = $this->getLang('enterKey');
         $JSINFO['encryptedpasswords']['enc_ok']       = $this->getLang('ok');
