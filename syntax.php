@@ -69,7 +69,7 @@ class syntax_plugin_encryptedpasswords extends DokuWiki_Syntax_Plugin {
                         $script.= "window.setTimeout('location.reload()',".$this->getConf('reload_seconds')."000);";
                     }
                     $renderer->doc.= '<span class="encryptedpasswords" title="'.$match.'">';
-                    $renderer->doc.= '<a title="'.$this->getLang('ok').'" href="#" onclick="'.$script.'">••••••••••</a>';
+                    $renderer->doc.= '<a title="'.$this->getLang('ok').'" onclick="'.$script.'">••••••••••</a>';
                     $renderer->doc.= '</span>';
                 break;
                 case DOKU_LEXER_EXIT :

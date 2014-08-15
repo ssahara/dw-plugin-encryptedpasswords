@@ -5,13 +5,13 @@
     padding: 0 3px;
 }
 
+.encryptedpasswords a:hover {
+    text-decoration: underline;
+}
+
 .encryptedpasswords .recrypt {
     display: none;
     font-size: 80%;
-    color: __text_alt__;
-}
-
-.encryptedpasswords .recrypt a {
     color: __text_alt__;
 }
 
