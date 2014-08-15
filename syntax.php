@@ -6,7 +6,7 @@
   * @author     Wolfgang Reszel <reszel@werbeagentur-willers.de>
   */
 
-if(!defined('DOKU_INC')) define('DOKU_INC',realpath(dirname(__FILE__).'/../../').'/');
+if(!defined('DOKU_INC')) die();
 if(!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN',DOKU_INC.'lib/plugins/');
 require_once(DOKU_PLUGIN.'syntax.php');
 
@@ -16,35 +16,27 @@ require_once(DOKU_PLUGIN.'syntax.php');
   */
 class syntax_plugin_encryptedpasswords extends DokuWiki_Syntax_Plugin {
 
-    /**
-      * What kind of syntax are we?
-      */
-    function getType(){
-        return 'protected';
-    }
+    protected $entry_pattern = '<decrypt>(?=.*?</decrypt>)';
+    protected $exit_pattern  = '</decrypt>';
 
-    /**
-      * Where to sort in?
-      */
-    function getSort(){
-        return 65;
-    }
+    public function getType(){ return 'protected'; }
+    public function getSort(){ return 65; }
 
     /**
       * Connect pattern to lexer
       */
-    function connectTo($mode) {
-        $this->Lexer->addEntryPattern('<decrypt>(?=.*?</decrypt>)',$mode,'plugin_encryptedpasswords');
+    public function connectTo($mode) {
+        $this->Lexer->addEntryPattern($this->entry_pattern,$mode,'plugin_encryptedpasswords');
     }
 
-    function postConnect() {
-        $this->Lexer->addExitPattern('</decrypt>','plugin_encryptedpasswords');
+    public function postConnect() {
+        $this->Lexer->addExitPattern($this->exit_pattern,'plugin_encryptedpasswords');
     }
 
     /**
       * Handle the match
       */
-    function handle($match, $state, $pos, &$handler){
+    public function handle($match, $state, $pos, Doku_Handler $handler) {
         switch ($state) {
             case DOKU_LEXER_ENTER :
                 return array($state, $match);
@@ -62,21 +54,21 @@ class syntax_plugin_encryptedpasswords extends DokuWiki_Syntax_Plugin {
     /**
       * Create output
       */
-    function render($mode, &$renderer, $data) {
-        if($mode == 'xhtml'){
+    public function render($format, Doku_Renderer $renderer, $data) {
+        if($format == 'xhtml'){
 
             list($state, $match) = $data;
             switch ($state) {
                 case DOKU_LEXER_ENTER :
                     $renderer->doc.= '';
-                    break;
+                break;
                 case DOKU_LEXER_UNMATCHED :
                     $id = uniqid();
                     $renderer->doc.= '<span class="encryptedpasswords" title="'.$match.'"><a title="'.$this->getLang('ok').'" href="#" onclick="decryptText(jQuery(\'.encryptedpasswords\'));window.setTimeout(\'location.reload()\',120000);">••••••••••</a></span>';
-                    break;
+                break;
                 case DOKU_LEXER_EXIT :
                     $renderer->doc .= '';
-                    break;
+                break;
             }
             return true;
         }
