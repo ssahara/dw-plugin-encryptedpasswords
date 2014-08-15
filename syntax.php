@@ -64,7 +64,13 @@ class syntax_plugin_encryptedpasswords extends DokuWiki_Syntax_Plugin {
                 break;
                 case DOKU_LEXER_UNMATCHED :
                     $id = uniqid();
-                    $renderer->doc.= '<span class="encryptedpasswords" title="'.$match.'"><a title="'.$this->getLang('ok').'" href="#" onclick="decryptText(jQuery(\'.encryptedpasswords\'));window.setTimeout(\'location.reload()\',120000);">••••••••••</a></span>';
+                    $script = "decryptText(jQuery('.encryptedpasswords'));";
+                    if ($this->getConf('reload_seconds') > 0) {
+                        $script.= "window.setTimeout('location.reload()',".$this->getConf('reload_seconds')."000);";
+                    }
+                    $renderer->doc.= '<span class="encryptedpasswords" title="'.$match.'">';
+                    $renderer->doc.= '<a title="'.$this->getLang('ok').'" href="#" onclick="'.$script.'">••••••••••</a>';
+                    $renderer->doc.= '</span>';
                 break;
                 case DOKU_LEXER_EXIT :
                     $renderer->doc .= '';
