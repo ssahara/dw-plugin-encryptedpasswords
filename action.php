@@ -17,6 +17,7 @@ class action_plugin_encryptedpasswords extends DokuWiki_Action_Plugin {
       */
     public function register(Doku_Event_Handler $controller) {
         $controller->register_hook('DOKUWIKI_STARTED', 'BEFORE', $this, '_exportToJSINFO');
+        $controller->register_hook('TOOLBAR_DEFINE', 'AFTER', $this, '_handleToolbar');
     }
 
     /**
@@ -35,5 +36,16 @@ class action_plugin_encryptedpasswords extends DokuWiki_Action_Plugin {
         $JSINFO['encryptedpasswords']['enc_keyerr']   = $this->getLang('keyErr');
         $JSINFO['encryptedpasswords']['enc_emptykey'] = $this->getLang('emptykey');
         $JSINFO['encryptedpasswords']['enc_recrypt']  = $this->getLang('recrypt');
+    }
+
+    /**
+     * Adds toolbar button
+     */
+    public function _handleToolbar(&$event, $param) {
+        $event->data[] = array (
+            'type' => 'encryptButtonClick',
+            'title' => $this->getLang('encryptbutton'),
+            'icon' => '../../plugins/encryptedpasswords/encrypt.png',
+        );
     }
 }
