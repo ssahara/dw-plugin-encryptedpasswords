@@ -9,7 +9,7 @@
 /* DOKUWIKI:include jsencryption.js */
 
 // Add a toolbar button to insert a encrypted password
-function addBtnActionClick(btn, props, edid) {
+function addBtnActionEncryptButtonClick(btn, props, edid) {
 
     jQuery(btn).click(function(){
         var sample = '';
@@ -69,17 +69,3 @@ function addBtnActionClick(btn, props, edid) {
     });
     return true;
 }
-
-function installEncryptButton() {
-    // but first check if there is a toolbar
-    if (window.toolbar != undefined) {
-        window.toolbar[window.toolbar.length] = {
-                "type":"Click", // we have a new type that links to the function
-                "title":JSINFO['encryptedpasswords']['enc_encb'],
-                "icon":"../../plugins/encryptedpasswords/encrypt.png"
-        }
-    }
-}
-
-jQuery(installEncryptButton());
-
