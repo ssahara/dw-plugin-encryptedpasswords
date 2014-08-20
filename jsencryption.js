@@ -144,7 +144,6 @@ function vcCreateDialog(a,a2,a3,vcClick) {
         }
         if ((c.keyCode == 10) || (c.keyCode == 13)) {
             vcClick(1)
-            return false;
         }
         if (c.keyCode == 27) {
             vcClick(0)
@@ -174,7 +173,6 @@ function vcCreateDialog(a,a2,a3,vcClick) {
             }
             if ((c.keyCode == 10) || (c.keyCode == 13)) {
                 vcClick(1)
-                return false;
             }
             if (c.keyCode == 27) {
                 vcClick(0)
