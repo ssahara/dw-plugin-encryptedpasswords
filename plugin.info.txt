@@ -2,6 +2,6 @@ base   encryptedpasswords
 name   Encrypted Passwords Plugin
 author Wolfgang Reszel
 email  reszel@werbeagentur-willers.de
-date   2014-08-20
+date   2014-09-13
 desc   This plugin let you store 256 bit AES encrypted passwords in your DokuWiki pages. The password can be decrypted by clicking them (Javascript must be enabled). Based on the encryption library by Vincent Cheung (http://www.vincentcheung.ca/jsencryption) which incorporates the Gibberish AES library by Mark Percival (https://github.com/mdp/gibberish-aes).
 url    https://www.dokuwiki.org/plugin:encryptedpasswords
