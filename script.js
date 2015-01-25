@@ -22,11 +22,11 @@ function addBtnActionEncryptButtonClick(btn, props, edid) {
             sample = selection.getText();
         }
         if (sample=='') {
-            alert(JSINFO['encryptedpasswords']['enc_nosel']);
+            alert(LANG.plugins.encryptedpasswords['noSelection']);
             return false;
         }
         if (sample.indexOf('<decrypt>') == 0 && sample.indexOf('</decrypt>') == sample.length-10) {
-            vcPrompt(JSINFO['encryptedpasswords']['enc_enter'], JSINFO['encryptedpasswords']['enc_ok'], 1, vcFunc = function(a) {
+            vcPrompt(LANG.plugins.encryptedpasswords['enterKey'], LANG.plugins.encryptedpasswords['decrypt'], 1, vcFunc = function(a) {
                 if (a) {
                     document.getElementById('wiki__text').focus();
                     try {
@@ -37,7 +37,7 @@ function addBtnActionEncryptButtonClick(btn, props, edid) {
                         vcClick_func(0);
                         decText = null;
                     } else {
-                        alert(JSINFO['encryptedpasswords']['enc_invalid'])
+                        alert(LANG.plugins.encryptedpasswords['invalidKey'])
                     }
                 } else { 
                     vcClick_func(0);
@@ -45,14 +45,14 @@ function addBtnActionEncryptButtonClick(btn, props, edid) {
                 };
             });
         } else {
-            vcPrompt(JSINFO['encryptedpasswords']['enc_enckey'], JSINFO['encryptedpasswords']['enc_ok2'], 2, vcFunc = function(a) {
+            vcPrompt(LANG.plugins.encryptedpasswords['encryptKey'], LANG.plugins.encryptedpasswords['encrypt'], 2, vcFunc = function(a) {
                 if (a) {
                     if (passElt.value !== passElt2.value) {
-                        alert(JSINFO['encryptedpasswords']['enc_keyerr']);
+                        alert(LANG.plugins.encryptedpasswords['keyErr']);
                         return false;
                     }
                     if (passElt.value == '') {
-                        alert(JSINFO['encryptedpasswords']['enc_emptykey']);
+                        alert(LANG.plugins.encryptedpasswords['emptyKey']);
                         return false;
                     }
                     document.getElementById('wiki__text').focus();

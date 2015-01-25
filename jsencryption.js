@@ -17,7 +17,7 @@ var decryptElementId;
 function decryptText(a, b, c) {
     decryptElementId = a;
     if (b == null) {
-        b = JSINFO['encryptedpasswords']['enc_enter']
+        b = LANG.plugins.encryptedpasswords['enterKey']
     }
     if (c != null && c) {
         var d = prompt(b, "");
@@ -43,12 +43,12 @@ function decrypt(a) {
             try {
                 var e = GibberishAES.dec(d, a);
                 b = true;
-                jQuery(c).text(e).after(' <span class="recrypt"><a href="." onclick="location.reload(); return false;">['+JSINFO['encryptedpasswords']['enc_recrypt']+']</a></span>');
+                jQuery(c).text(e).after(' <span class="recrypt"><a href="." onclick="location.reload(); return false;">['+LANG.plugins.encryptedpasswords['recrypt']+']</a></span>');
                 c.title = "";
             } catch(err) {}
         }
         if (!b) {
-            alert(JSINFO['encryptedpasswords']['enc_invalid'])
+            alert(LANG.plugins.encryptedpasswords['invalidKey'])
         }
     }
 }
@@ -200,7 +200,7 @@ function vcCreateDialog(a,a2,a3,vcClick) {
     var d = document.createElement("input");
     d.setAttribute("tabindex", "1003");
     d.type = "button";
-    d.value = JSINFO['encryptedpasswords']['enc_cancel'];
+    d.value = LANG.plugins.encryptedpasswords['cancel'];
     d.onclick = function() {
         vcClick(0)
     };
@@ -211,7 +211,7 @@ function vcCreateDialog(a,a2,a3,vcClick) {
     d = document.createElement("input");
     d.setAttribute("tabindex", "1004");
     d.type = "button";
-    d.value = a2 != null ? a2 : JSINFO['encryptedpasswords']['enc_ok'];
+    d.value = a2 != null ? a2 : LANG.plugins.encryptedpasswords['decrypt'];
     d.onclick = function() {
         vcClick(1)
     };
