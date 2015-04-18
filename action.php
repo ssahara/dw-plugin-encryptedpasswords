@@ -42,6 +42,7 @@ class action_plugin_encryptedpasswords extends DokuWiki_Action_Plugin {
         }
 
         // check <decrypt></decriprt> used in wiki text
+        $ptn = '#<decrypt>[\s\S]*?</decrypt>#';
         if (isset($wikitext) && (preg_match($ptn, $wikitext)!==false) && $conf['usedraft']) {
             $conf['usedraft'] = 0;
             if ($this->getConf('msg_autodraft')) {
