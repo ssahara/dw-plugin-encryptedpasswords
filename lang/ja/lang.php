@@ -19,3 +19,5 @@ $lang['js']['emptyKey']    = 'キーを入力してください!';
 $lang['js']['invalidKey']  = '復号化キーが不正です';
 $lang['js']['noSelection'] = '暗号化するテキストを選択してください';
 $lang['js']['recrypt']     = '暗号状態に戻す';
+
+$lang['msg_AutoDraftDisabled'] = '自動ドラフト保存機能は一時的に無効化されています';
