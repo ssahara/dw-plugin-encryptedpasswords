@@ -23,7 +23,7 @@ class action_plugin_encryptedpasswords extends DokuWiki_Action_Plugin {
     /**
      * Adds toolbar button
      */
-    public function _handleToolbar(&$event, $param) {
+    public function _handleToolbar(Doku_Event $event, $param) {
         $event->data[] = array (
             'type' => 'encryptButtonClick',
             'title' => $this->getLang('toolbar_icon_title'),
@@ -34,7 +34,7 @@ class action_plugin_encryptedpasswords extends DokuWiki_Action_Plugin {
     /**
      * Disable auto draft saving
      */
-    public function _disableAutoDraft(&$event, $param) {
+    public function _disableAutoDraft(Doku_Event $event, $param) {
         global $conf;
         $pos = $event->data->findElementByType('wikitext');
         if ($pos !== false) {
