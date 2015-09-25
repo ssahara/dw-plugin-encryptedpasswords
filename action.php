@@ -25,7 +25,7 @@ class action_plugin_encryptedpasswords extends DokuWiki_Action_Plugin {
         $event->data[] = array (
             'type' => 'encryptButtonClick',
             'title' => $this->getLang('toolbar_icon_title'),
-            'icon' => DOKU_BASE.'lib/plugins/encryptedpasswords/encrypt.png',
+            'icon' => DOKU_REL.'lib/plugins/encryptedpasswords/encrypt.png',
         );
     }
 
