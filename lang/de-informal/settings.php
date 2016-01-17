@@ -4,5 +4,6 @@
  * German language for settings
  */
 
-$lang['reload_seconds'] = 'Automatisches neuladen der Seite in Sekunden nach der Entschlüsselung. Durch das Neuladen der Seite, ist der Text wieder verschlüsselt. Verwendet man 0, wird das automatische neuladen der Seite deaktiviert.';
-$lang['notify']         = 'Benachrichtigung, wenn das automatische Speichern des Entwurfes deaktiviert wird.';
+$lang['reload_seconds'] = 'Zeit (in Sekunden) nach der die Seite neu geladen wird. Durch das Neuladen der Seite, wird der entschlüsselte Text wieder verschlüsselt. Verwendet man 0, wird das automatische Neuladen der Seite deaktiviert.';
+$lang['notify']         = 'Benachrichtigung anzeigen, wenn das automatische Speichern des Entwurfes deaktiviert wird?';
+

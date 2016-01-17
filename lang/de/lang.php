@@ -1,6 +1,10 @@
 <?php
+/*
+ * DokuWiki plugin Encrypted Passwords;
+ * German language
+ */
 
-$lang['toolbar_icon_title'] = 'Markiertes Password verschlüsseln oder entschlüsseln';
+$lang['toolbar_icon_title'] = 'Markiertes Passwort verschlüsseln oder entschlüsseln';
 $lang['decrypt'] = 'Entschlüsseln';
 
 $lang['js']['enterKey']    = 'Passwort für die Entschlüsselung:';
@@ -15,4 +19,5 @@ $lang['js']['noSelection'] = 'Bitte den Text auswählen, welcher verschlüsselt 
 $lang['js']['recrypt']     = 'verschlüsseln';
 
 
-$lang['msg_AutoDraftDisabled'] = 'Das automatische Speichern des Entwurfs wird vorübergehend deaktiviert.';
+$lang['msg_AutoDraftDisabled'] = 'Das automatische Speichern des Entwurfs wird vorübergehend deaktiviert. Dadruch wird unterbunden, dass entschlüsselte Passwörter an den Server übertragen werden.';
+
