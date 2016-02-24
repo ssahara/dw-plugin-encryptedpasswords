@@ -13,3 +13,5 @@ $lang['js']['emptyKey']    = 'Adjon meg egy kulcsot!';
 $lang['js']['invalidKey']  = 'Hibás kulcs';
 $lang['js']['noSelection'] = 'Válassza ki a titkosítandó szöveget';
 $lang['js']['recrypt']     = 'újra titkosítás';
+
+$lang['msg_AutoDraftDisabled'] = 'Automatikus piszkozat mentés átmenetileg kikapcsolva.';
