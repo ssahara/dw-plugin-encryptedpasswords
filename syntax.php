@@ -10,8 +10,11 @@ if(!defined('DOKU_INC')) die();
 
 class syntax_plugin_encryptedpasswords extends DokuWiki_Syntax_Plugin {
 
-    protected $entry_pattern = '<decrypt>(?=.*?</decrypt>)';
-    protected $exit_pattern  = '</decrypt>';
+    protected $mode = 'plugin_encryptedpasswords';
+    protected $pattern = array(
+            1 => '<decrypt>(?=.*?</decrypt>)',  // DOKU_LEXER_ENTER
+            4 => '</decrypt>',                  // DOKU_LEXER_EXIT
+    );
 
     public function getType(){ return 'protected'; }
     public function getSort(){ return 65; }
@@ -20,11 +23,11 @@ class syntax_plugin_encryptedpasswords extends DokuWiki_Syntax_Plugin {
       * Connect pattern to lexer
       */
     public function connectTo($mode) {
-        $this->Lexer->addEntryPattern($this->entry_pattern,$mode,'plugin_encryptedpasswords');
+        $this->Lexer->addEntryPattern($this->pattern[1], $mode, $this->mode);
     }
 
     public function postConnect() {
-        $this->Lexer->addExitPattern($this->exit_pattern,'plugin_encryptedpasswords');
+        $this->Lexer->addExitPattern($this->pattern[4], $this->mode);
     }
 
     /**
