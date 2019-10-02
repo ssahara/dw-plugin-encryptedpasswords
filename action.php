@@ -6,22 +6,24 @@
   * @author     Wolfgang Reszel <reszel@werbeagentur-willers.de>
   */
 
-if(!defined('DOKU_INC')) die();
+if (!defined('DOKU_INC')) die();
 
-class action_plugin_encryptedpasswords extends DokuWiki_Action_Plugin {
-
+class action_plugin_encryptedpasswords extends DokuWiki_Action_Plugin
+{
     /**
       * Register its handlers with the DokuWiki's event controller
       */
-    public function register(Doku_Event_Handler $controller) {
-        $controller->register_hook('TOOLBAR_DEFINE', 'AFTER', $this, '_handleToolbar');
-        $controller->register_hook('HTML_EDITFORM_OUTPUT', 'BEFORE', $this, '_disableAutoDraft');
+    public function register(Doku_Event_Handler $controller)
+    {
+        $controller->register_hook('TOOLBAR_DEFINE', 'AFTER', $this, 'handleToolbar');
+        $controller->register_hook('HTML_EDITFORM_OUTPUT', 'BEFORE', $this, 'disableAutoDraft');
      }
 
     /**
      * Adds toolbar button
      */
-    public function _handleToolbar(Doku_Event $event, $param) {
+    public function handleToolbar(Doku_Event $event, $param)
+    {
         $event->data[] = array (
             'type' => 'encryptButtonClick',
             'title' => $this->getLang('toolbar_icon_title'),
@@ -32,7 +34,8 @@ class action_plugin_encryptedpasswords extends DokuWiki_Action_Plugin {
     /**
      * Disable auto draft saving
      */
-    public function _disableAutoDraft(Doku_Event $event, $param) {
+    public function disableAutoDraft(Doku_Event $event, $param)
+    {
         global $conf;
         $pos = $event->data->findElementByType('wikitext');
         if ($pos !== false) {
