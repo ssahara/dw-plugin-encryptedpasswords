@@ -1,12 +1,13 @@
 <?php
+
+use dokuwiki\Form\Form;
+
 /**
   * Encrypted Passwords Plugin: Store encrypted passwords with syntax <decrypt></decrypt>
   *
   * @license    GPL2 (http://www.gnu.org/licenses/gpl.html)
   * @author     Wolfgang Reszel <reszel@werbeagentur-willers.de>
   */
-
-if (!defined('DOKU_INC')) die();
 
 class action_plugin_encryptedpasswords extends DokuWiki_Action_Plugin
 {
@@ -16,6 +17,9 @@ class action_plugin_encryptedpasswords extends DokuWiki_Action_Plugin
     public function register(Doku_Event_Handler $controller)
     {
         $controller->register_hook('TOOLBAR_DEFINE', 'AFTER', $this, 'handleToolbar');
+        $controller->register_hook('FORM_EDIT_OUTPUT', 'BEFORE', $this, 'disableAutoDraft');
+
+        // legacy support
         $controller->register_hook('HTML_EDITFORM_OUTPUT', 'BEFORE', $this, 'disableAutoDraft');
      }
 
@@ -37,14 +41,27 @@ class action_plugin_encryptedpasswords extends DokuWiki_Action_Plugin
     public function disableAutoDraft(Doku_Event $event, $param)
     {
         global $conf;
-        $pos = $event->data->findElementByType('wikitext');
-        if ($pos !== false) {
-            $wikitext = $event->data->_content[$pos]['_text'];
+        $form =& $event->data;
+
+        if (is_a($form, Form::class)
+            && ($pos = $form->findPositionByAttribute('id', 'wiki__text')) !== false
+        ) {
+            // applicable to DW development snapshot 2020-10-13 or later
+            $wikitext = $form->getElementAt($pos)->val();
+
+        } elseif (is_a($form, 'Doku_Form') // $event->name == 'HTML_EDITFORM_OUTPUT'
+            && ($pos = $form->findElementByType('wikitext')) !== false
+        ) {
+            // applicable to DW release 2020-07-29 "Hogfather" and older
+            $textarea = $form->getElementAt($pos);
+            $wikitext = $textarea['_text'];
+        } else {
+            return;
         }
 
         // check <decrypt></decriprt> used in wiki text
         $ptn = '#<decrypt>[\s\S]*?</decrypt>#';
-        if (isset($wikitext) && preg_match($ptn, $wikitext) && $conf['usedraft']) {
+        if (preg_match($ptn, $wikitext) && $conf['usedraft']) {
             $conf['usedraft'] = 0;
             if ($this->getConf('notify')) {
                 msg($this->getPluginName().': '.$this->getLang('msg_AutoDraftDisabled'), 2);

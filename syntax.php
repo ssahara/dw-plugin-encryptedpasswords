@@ -1,13 +1,11 @@
 <?php
+
 /**
   * Encrypted Passwords Plugin: Store encrypted passwords with syntax <decrypt></decrypt>
   *
   * @license    GPL2 (http://www.gnu.org/licenses/gpl.html)
   * @author     Wolfgang Reszel <reszel@werbeagentur-willers.de>
   */
-
-if (!defined('DOKU_INC')) die();
-
 class syntax_plugin_encryptedpasswords extends DokuWiki_Syntax_Plugin
 {
     public function getType()
