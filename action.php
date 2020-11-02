@@ -28,7 +28,7 @@ class action_plugin_encryptedpasswords extends DokuWiki_Action_Plugin
      */
     public function handleToolbar(Doku_Event $event, $param)
     {
-        $event->data[] = array (
+        $event->data[] = array(
             'type' => 'encryptButtonClick',
             'title' => $this->getLang('toolbar_icon_title'),
             'icon' => DOKU_REL.'lib/plugins/encryptedpasswords/encrypt.png',
@@ -43,7 +43,7 @@ class action_plugin_encryptedpasswords extends DokuWiki_Action_Plugin
         global $conf;
         $form =& $event->data;
 
-        if (is_a($form, Form::class)
+        if (is_a($form, Form::class) // $event->name is 'FORM_EDIT_OUTPUT'
             && ($pos = $form->findPositionByAttribute('id', 'wiki__text')) !== false
         ) {
             // applicable to DW development snapshot 2020-10-13 or later
