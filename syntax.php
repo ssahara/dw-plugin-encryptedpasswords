@@ -51,13 +51,13 @@ class syntax_plugin_encryptedpasswords extends DokuWiki_Syntax_Plugin
     {
         switch ($state) {
             case DOKU_LEXER_ENTER :
-              //return $data = array($state, '');
+                return $data = array($state, '');
                 break;
             case DOKU_LEXER_UNMATCHED :
                 return $data = array($state, $match);
                 break;
             case DOKU_LEXER_EXIT :
-              //return $data = array($state, '');
+                return $data = array($state, '');
                 break;
         }
         return $data = false;
