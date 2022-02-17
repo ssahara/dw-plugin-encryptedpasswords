@@ -40,7 +40,11 @@ class syntax_plugin_encryptedpasswords extends \dokuwiki\Extension\SyntaxPlugin
         }
 
         $crypt = hsc($data[0]);
-        $renderer->doc .= '<span class="encryptedpasswords crypted" data-crypted="' . $crypt . '">••••••••••</span>';
+        $renderer->doc .= '<span class="encryptedpasswords crypted" data-crypted="' . $crypt . '">';
+        $renderer->doc .= '<span>••••••••••</span>';
+        $renderer->doc .= inlineSVG(__DIR__ . '/lock.svg');
+        $renderer->doc .= inlineSVG(__DIR__ . '/lock-open.svg');
+        $renderer->doc .= '</span>';
         return true;
     }
 }

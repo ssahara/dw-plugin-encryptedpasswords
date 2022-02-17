@@ -1,0 +1,23 @@
+.encryptedpasswords {
+    display: inline-block;
+    background-color: @ini_background_alt;
+    color: @ini_text;
+    padding: 0 0.2em;
+
+    span {
+        font-family: monospace;
+    }
+
+    svg {
+        height: 1em;
+        vertical-align: middle;
+        fill: @ini_text;
+        padding: 0 0.2em;
+    }
+
+    &.crypted {
+        svg:last-of-type {
+            display: none;
+        }
+    }
+}
