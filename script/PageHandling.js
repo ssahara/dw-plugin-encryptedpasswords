@@ -1,9 +1,5 @@
 /**
  * Handling of passwords in the displayed page
- *
- * @todo hide password
- * @todo timer to hide all passwords again
- * @todo copy to clipboard
  */
 class PageHandling {
 
@@ -19,6 +15,7 @@ class PageHandling {
 
         jQuery('.encryptedpasswords svg:first').on('click', this.showAll.bind(this));
         jQuery('.encryptedpasswords svg:last').on('click', this.hideAll.bind(this));
+        jQuery('.encryptedpasswords span').on('click', this.copyHandler.bind(this));
     }
 
     /**
@@ -41,6 +38,36 @@ class PageHandling {
             $element.addClass('error');
             $element.attr('title', 'Failed to decrypt, wrong passphrase?');
         }
+    }
+
+    /**
+     * Copy a clicked password to clipboard
+     *
+     * @param {Event} e
+     */
+    async copyHandler(e) {
+        const $element = jQuery(e.target).parent();
+        let clear = $element.find('span').text(); // get early, timer may interfere
+        const cipher = $element.data('crypted');
+
+        if ($element.hasClass('crypted')) {
+            const passphrase = window.prompt('Please enter the passphrase');
+            if (passphrase === null || passphrase === '') return;
+            try {
+                clear = await this.aes.aesGcmDecrypt(cipher, passphrase);
+            } catch (e) {
+                GUI.toast('Failed to decrypt, wrong passphrase?', 'error');
+                return;
+            }
+        }
+
+        try {
+            await navigator.clipboard.writeText(clear);
+            GUI.toast('copied to clipboard', 'success');
+        } catch (e) {
+            GUI.toast('clipboard access failed', 'error');
+        }
+
     }
 
     /**

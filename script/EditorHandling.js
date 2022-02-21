@@ -1,3 +1,6 @@
+/**
+ * Handle interaction with the DokuWiki editor
+ */
 class EditorHandling {
 
     failcount = 0;
@@ -48,7 +51,7 @@ class EditorHandling {
         form.wikitext.value = await this.decryptSyntax(text, passphrase);
 
         if(this.failcount) {
-            alert(`${this.failcount} passwords not decoded`);
+            GUI.toast(`${this.failcount} passwords not decoded`, 'error');
         }
     }
 
