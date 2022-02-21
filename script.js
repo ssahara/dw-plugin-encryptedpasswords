@@ -16,6 +16,7 @@ if (typeof window.toolbar !== 'undefined') {
 
 jQuery(function () {
     /* DOKUWIKI:include script/GUI.js */
+    /* DOKUWIKI:include script/md5.min.js */
     /* DOKUWIKI:include script/SubtleAES.js */
     /* DOKUWIKI:include script/PageHandling.js */
     /* DOKUWIKI:include script/EditorHandling.js */

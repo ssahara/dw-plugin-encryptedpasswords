@@ -70,7 +70,7 @@ class EditorHandling {
         for (let i = 0; i < matches.length; i++) {
             const cipher = matches[i][1];
             try {
-                const clear = await this.aes.aesGcmDecrypt(cipher, passphrase);
+                const clear = await this.aes.decrypt(cipher, passphrase);
                 text = text.replace(matches[i][0], `<encrypt>${clear}</encrypt>`);
             } catch (e) {
                 this.failcount++;
@@ -133,7 +133,7 @@ class EditorHandling {
 
         for (let i = 0; i < matches.length; i++) {
             const clear = matches[i][1];
-            const cipher = await this.aes.aesGcmEncrypt(clear, passphrase);
+            const cipher = await this.aes.encrypt(clear, passphrase);
             text = text.replace(matches[i][0], `<decrypt>${cipher}</decrypt>`);
         }
 

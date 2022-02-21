@@ -1,74 +1,133 @@
 /**
- * Encaspsulates AES-GCM encryption using SubtleCrypto
- * @author Chris Veness
- * @license MIT
+ * Encaspsulates AES-CBC encryption using SubtleCrypto
+ *
  * @link https://gist.github.com/chrisveness/43bcda93af9f646d083fad678071b90a
  */
 class SubtleAES {
+
+    iterations = 10000; // OpenSSL default
+
     /**
-     * Encrypts plaintext using AES-GCM with supplied password, for decryption with aesGcmDecrypt().
+     * Encrypts plaintext using AES-CBC with Pkdf2 derived key
      *
-     * @param   {String} plaintext - Plaintext to be encrypted.
-     * @param   {String} password - Password to use to encrypt plaintext.
-     * @returns {Promise<String>} Encrypted ciphertext.
-     *
-     * @example
-     *   const ciphertext = await aesGcmEncrypt('my secret text', 'pw');
-     *   aesGcmEncrypt('my secret text', 'pw').then(function(ciphertext) { console.log(ciphertext); });
+     * @param   {String} plaintext Plaintext to be encrypted
+     * @param   {String} password Password to use to encrypt plaintext
+     * @returns {Promise<String>} Encrypted ciphertext base64 encoded
+
      */
-    async aesGcmEncrypt(plaintext, password) {
-        const pwUtf8 = new TextEncoder().encode(password);                                 // encode password as UTF-8
-        const pwHash = await crypto.subtle.digest('SHA-256', pwUtf8);                      // hash the password
+    async encrypt(plaintext, password) {
 
-        const iv = crypto.getRandomValues(new Uint8Array(12));                             // get 96-bit random iv
-        const ivStr = Array.from(iv).map(b => String.fromCharCode(b)).join('');            // iv as utf-8 string
+        const salt = this.randomSalt();
+        const {hash, iv} = await this.derivePkdf2(password, salt, 'SHA-256', this.iterations, 48);
 
-        const alg = {name: 'AES-GCM', iv: iv};                                           // specify algorithm to use
+        const alg = {name: 'AES-CBC', iv: iv};
+        const key = await crypto.subtle.importKey('raw', hash, alg, false, ['encrypt']);
 
-        const key = await crypto.subtle.importKey('raw', pwHash, alg, false, ['encrypt']); // generate key from pw
+        const cipher = await crypto.subtle.encrypt(alg, key, new TextEncoder().encode(plaintext));
 
-        const ptUint8 = new TextEncoder().encode(plaintext);                               // encode plaintext as UTF-8
-        const ctBuffer = await crypto.subtle.encrypt(alg, key, ptUint8);                   // encrypt plaintext using key
-
-        const ctArray = Array.from(new Uint8Array(ctBuffer));                              // ciphertext as byte array
-        const ctStr = ctArray.map(byte => String.fromCharCode(byte)).join('');             // ciphertext as string
-
-        return btoa(ivStr + ctStr);                                                          // iv+ciphertext base64-encoded
+        return this.createOpenSSLCryptString(salt, new Uint8Array(cipher));
     }
 
     /**
-     * Decrypts ciphertext encrypted with aesGcmEncrypt() using supplied password.
-     *                                                                      (c) Chris Veness MIT Licence
+     * Decrypts OpenSSL ciphertext
      *
-     * @param   {String} ciphertext - Ciphertext to be decrypted.
-     * @param   {String} password - Password to use to decrypt ciphertext.
+     * @param   {String} ciphertext Base64 encoded ciphertext to be decrypted.
+     * @param   {String} password Password to use to decrypt ciphertext
      * @returns {Promise<String>} Decrypted plaintext.
-     *
-     * @example
-     *   const plaintext = await aesGcmDecrypt(ciphertext, 'pw');
-     *   aesGcmDecrypt(ciphertext, 'pw').then(function(plaintext) { console.log(plaintext); });
      */
-    async aesGcmDecrypt(ciphertext, password) {
-        const pwUtf8 = new TextEncoder().encode(password);                                 // encode password as UTF-8
-        const pwHash = await crypto.subtle.digest('SHA-256', pwUtf8);                      // hash the password
+    async decrypt(ciphertext, password) {
 
-        const ivStr = atob(ciphertext).slice(0, 12);                                        // decode base64 iv
-        const iv = new Uint8Array(Array.from(ivStr).map(ch => ch.charCodeAt(0)));          // iv as Uint8Array
+        const {salt, cipher} = this.parseOpenSSLCryptString(ciphertext);
+        const {hash, iv} = await this.derivePkdf2(password, salt, 'SHA-256', this.iterations, 48);
 
-        const alg = {name: 'AES-GCM', iv: iv};                                           // specify algorithm to use
-
-        const key = await crypto.subtle.importKey('raw', pwHash, alg, false, ['decrypt']); // generate key from pw
-
-        const ctStr = atob(ciphertext).slice(12);                                          // decode base64 ciphertext
-        const ctUint8 = new Uint8Array(Array.from(ctStr).map(ch => ch.charCodeAt(0)));     // ciphertext as Uint8Array
-        // note: why doesn't ctUint8 = new TextEncoder().encode(ctStr) work?
+        const alg = {name: 'AES-CBC', iv: iv};
+        const key = await crypto.subtle.importKey('raw', hash, alg, false, ['decrypt']);
 
         try {
-            const plainBuffer = await crypto.subtle.decrypt(alg, key, ctUint8);            // decrypt ciphertext using key
-            const plaintext = new TextDecoder().decode(plainBuffer);                       // plaintext from ArrayBuffer
-            return plaintext;                                                              // return the plaintext
+            const plainBuffer = await crypto.subtle.decrypt(alg, key, cipher);
+            return new TextDecoder().decode(plainBuffer);
         } catch (e) {
             throw new Error('Decrypt failed');
         }
     }
+
+    /**
+     * Generate a random salt
+     *
+     * @return {Uint8Array}
+     */
+    randomSalt() {
+        return crypto.getRandomValues(new Uint8Array(8));
+    }
+
+    /**
+     * Parse a base64 string created by openssl enc
+     *
+     * @param str
+     * @return {{cipher: Uint8Array, salt: Uint8Array}}
+     */
+    parseOpenSSLCryptString(str) {
+        const ostring = atob(str);
+
+        if (ostring.slice(0, 8) !== 'Salted__') {
+            throw new Error('Input seems not to be created by OpenSSL compatible enc mechanism');
+        }
+
+        return {
+            salt: new Uint8Array(Array.from(ostring.slice(8, 16)).map(ch => ch.charCodeAt(0))),
+            cipher: new Uint8Array(Array.from(ostring.slice(16)).map(ch => ch.charCodeAt(0))),
+        }
+    }
+
+    /**
+     * Create the openssl enc compatible string
+     *
+     * @param {Uint8Array} salt
+     * @param {Uint8Array} cipher
+     * @return {string}
+     */
+    createOpenSSLCryptString(salt, cipher) {
+        const concat = new Uint8Array([
+            0x53, 0x61, 0x6c, 0x74, 0x65, 0x64, 0x5f, 0x5f, // Salted__
+            ...salt,
+            ...cipher,
+        ]);
+
+        // base64 string
+        return btoa(String.fromCharCode.apply(null, concat));
+    }
+
+    /**
+     * Use PKDF2 to derive the IV and key
+     *
+     * @param {string} strPassword The clear text password
+     * @param {Uint8Array} salt    The salt
+     * @param {string} hash        The Hash model, e.g. ["SHA-256" | "SHA-512"]
+     * @param {int} iterations     Number of iterations
+     * @return {Promise<{cipher: Uint8Array, salt: Uint8Array}>}
+     * @link https://stackoverflow.com/q/67993979
+     */
+    async derivePkdf2(strPassword, salt, hash, iterations) {
+        const password = new TextEncoder().encode(strPassword);
+
+        const ik = await window.crypto.subtle.importKey("raw", password, {name: "PBKDF2"}, false, ["deriveBits"]);
+        const dk = await window.crypto.subtle.deriveBits(
+            {
+                name: "PBKDF2",
+                hash: hash,
+                salt: salt,
+                iterations: iterations
+            },
+            ik,
+            48 * 8
+        );  // Bytes to bits
+        const buffer = new Uint8Array(dk);
+
+        return {
+            hash: buffer.slice(0, 32),
+            iv: buffer.slice(32, 48),
+        }
+    }
+
+
 }

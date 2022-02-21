@@ -39,7 +39,7 @@ class PageHandling {
         $element.attr('title', '');
 
         try {
-            const clear = await this.aes.aesGcmDecrypt(cipher, passphrase);
+            const clear = await this.aes.decrypt(cipher, passphrase);
             $element.find('span').text(clear);
             $element.removeClass('crypted');
             $element.addClass('clear');
@@ -63,7 +63,7 @@ class PageHandling {
             const passphrase = window.prompt(LANG.plugins.encryptedpasswords.enterKey);
             if (passphrase === null || passphrase === '') return;
             try {
-                clear = await this.aes.aesGcmDecrypt(cipher, passphrase);
+                clear = await this.aes.decrypt(cipher, passphrase);
             } catch (e) {
                 GUI.toast(LANG.plugins.encryptedpasswords.invalidKey, 'error');
                 return;
