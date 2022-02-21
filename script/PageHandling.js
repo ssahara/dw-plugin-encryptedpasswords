@@ -13,8 +13,8 @@ class PageHandling {
     constructor(aes) {
         this.aes = aes;
 
-        jQuery('.encryptedpasswords svg:first').on('click', this.showAll.bind(this));
-        jQuery('.encryptedpasswords svg:last').on('click', this.hideAll.bind(this));
+        jQuery('.encryptedpasswords svg:first-of-type').on('click', this.showAll.bind(this));
+        jQuery('.encryptedpasswords svg:last-of-type').on('click', this.hideAll.bind(this));
         jQuery('.encryptedpasswords span').on('click', this.copyHandler.bind(this));
     }
 
