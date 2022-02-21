@@ -7,6 +7,8 @@
  */
 class PageHandling {
 
+    timer = null;
+
     /**
      * Register handlers
      *
@@ -15,7 +17,8 @@ class PageHandling {
     constructor(aes) {
         this.aes = aes;
 
-        jQuery('.encryptedpasswords.crypted svg').on('click', this.showAll.bind(this));
+        jQuery('.encryptedpasswords svg:first').on('click', this.showAll.bind(this));
+        jQuery('.encryptedpasswords svg:last').on('click', this.hideAll.bind(this));
     }
 
     /**
@@ -32,7 +35,8 @@ class PageHandling {
         try {
             const clear = await this.aes.aesGcmDecrypt(cipher, passphrase);
             $element.find('span').text(clear);
-            $element.toggleClass('crypted clear');
+            $element.removeClass('crypted');
+            $element.addClass('clear');
         } catch (e) {
             $element.addClass('error');
             $element.attr('title', 'Failed to decrypt, wrong passphrase?');
@@ -51,6 +55,37 @@ class PageHandling {
             self.showClear(jQuery(e), passphrase);
         });
 
-        //FIXME register timer here
+        this.setTimer();
+    }
+
+    /**
+     * Hide all passwords in the page
+     */
+    hideAll() {
+        jQuery('.encryptedpasswords.clear')
+            .removeClass('clear')
+            .addClass('crypted')
+            .find('span').text('••••••••••');
+        this.clearTimer();
+    }
+
+    /**
+     * Set the timer to hide all passwords again
+     */
+    setTimer() {
+        const timeout = JSINFO.plugins.encryptedpasswords.timeout;
+        if (!timeout) return;
+        this.clearTimer();
+        this.timer = window.setTimeout(this.hideAll.bind(this), timeout * 1000);
+    }
+
+    /**
+     * Clear any timer that might be set
+     */
+    clearTimer() {
+        if (this.timer !== null) {
+            window.clearTimeout(this.timer);
+            this.timer = null;
+        }
     }
 }
