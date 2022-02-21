@@ -2,7 +2,7 @@
 if (typeof window.toolbar !== 'undefined') {
     toolbar[toolbar.length] = {
         type: 'encryptedPasswordsToggle',
-        title: 'FIXME button title',
+        title: LANG.plugins.encryptedpasswords.decryptAll,
         icon: DOKU_BASE + 'lib/plugins/encryptedpasswords/encrypt.png',
     };
 

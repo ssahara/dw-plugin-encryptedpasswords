@@ -13,9 +13,18 @@ class PageHandling {
     constructor(aes) {
         this.aes = aes;
 
-        jQuery('.encryptedpasswords svg:first-of-type').on('click', this.showAll.bind(this));
-        jQuery('.encryptedpasswords svg:last-of-type').on('click', this.hideAll.bind(this));
-        jQuery('.encryptedpasswords span').on('click', this.copyHandler.bind(this));
+        jQuery('.encryptedpasswords svg:first-of-type')
+            .on('click', this.showAll.bind(this))
+            .attr('title', LANG.plugins.encryptedpasswords.decryptAll)
+        ;
+        jQuery('.encryptedpasswords svg:last-of-type')
+            .on('click', this.hideAll.bind(this))
+            .attr('title', LANG.plugins.encryptedpasswords.hideAll)
+        ;
+        jQuery('.encryptedpasswords span')
+            .on('click', this.copyHandler.bind(this))
+            .attr('title', LANG.plugins.encryptedpasswords.copy)
+        ;
     }
 
     /**
@@ -36,7 +45,7 @@ class PageHandling {
             $element.addClass('clear');
         } catch (e) {
             $element.addClass('error');
-            $element.attr('title', 'Failed to decrypt, wrong passphrase?');
+            $element.attr('title', LANG.plugins.encryptedpasswords.invalidKey);
         }
     }
 
@@ -51,21 +60,21 @@ class PageHandling {
         const cipher = $element.data('crypted');
 
         if ($element.hasClass('crypted')) {
-            const passphrase = window.prompt('Please enter the passphrase');
+            const passphrase = window.prompt(LANG.plugins.encryptedpasswords.enterKey);
             if (passphrase === null || passphrase === '') return;
             try {
                 clear = await this.aes.aesGcmDecrypt(cipher, passphrase);
             } catch (e) {
-                GUI.toast('Failed to decrypt, wrong passphrase?', 'error');
+                GUI.toast(LANG.plugins.encryptedpasswords.invalidKey, 'error');
                 return;
             }
         }
 
         try {
             await navigator.clipboard.writeText(clear);
-            GUI.toast('copied to clipboard', 'success');
+            GUI.toast(LANG.plugins.encryptedpasswords.copyOk, 'success');
         } catch (e) {
-            GUI.toast('clipboard access failed', 'error');
+            GUI.toast(LANG.plugins.encryptedpasswords.copyFail, 'error');
         }
 
     }
@@ -75,7 +84,7 @@ class PageHandling {
      */
     showAll() {
         const self = this;
-        const passphrase = window.prompt('Please enter the passphrase');
+        const passphrase = window.prompt(LANG.plugins.encryptedpasswords.enterKey);
         if (passphrase === null || passphrase === '') return;
 
         jQuery('.encryptedpasswords.crypted').each(function (i, e) {

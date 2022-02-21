@@ -41,7 +41,7 @@ class EditorHandling {
         }
 
         // ask for passphrase
-        const passphrase = window.prompt("Please enter the passphrase");
+        const passphrase = window.prompt(LANG.plugins.encryptedpasswords.enterKey);
         if (passphrase === null || passphrase === '') return;
 
         // replace
@@ -50,8 +50,8 @@ class EditorHandling {
         form.suffix.value = await this.decryptSyntax(suffix, passphrase);
         form.wikitext.value = await this.decryptSyntax(text, passphrase);
 
-        if(this.failcount) {
-            GUI.toast(`${this.failcount} passwords not decoded`, 'error');
+        if (this.failcount) {
+            GUI.toast(LANG.plugins.encryptedpasswords.failcount.replace('%d', this.failcount), 'error');
         }
     }
 
@@ -107,7 +107,7 @@ class EditorHandling {
         e.preventDefault();
 
         // ask for passphrase
-        const passphrase = window.prompt("There are clear text passwords.\nPlease enter the passphrase");
+        const passphrase = window.prompt(LANG.plugins.encryptedpasswords.enterKey);
         if (passphrase === null || passphrase === '') return;
 
         // replace
