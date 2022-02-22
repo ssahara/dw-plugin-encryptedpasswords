@@ -70,7 +70,7 @@ class EditorHandling {
         for (let i = 0; i < matches.length; i++) {
             const cipher = matches[i][1];
             try {
-                const clear = await this.aes.decrypt(cipher, passphrase);
+                const clear = await this.aes.autodecrypt(cipher, passphrase);
                 text = text.replace(matches[i][0], `<encrypt>${clear}</encrypt>`);
             } catch (e) {
                 this.failcount++;

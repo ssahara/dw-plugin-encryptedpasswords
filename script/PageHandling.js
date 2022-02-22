@@ -39,7 +39,7 @@ class PageHandling {
         $element.attr('title', '');
 
         try {
-            const clear = await this.aes.decrypt(cipher, passphrase);
+            const clear = await this.aes.autodecrypt(cipher, passphrase);
             $element.find('span').text(clear);
             $element.removeClass('crypted');
             $element.addClass('clear');

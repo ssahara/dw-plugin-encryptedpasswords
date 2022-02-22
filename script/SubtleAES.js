@@ -57,6 +57,22 @@ class SubtleAES {
     }
 
     /**
+     * Decrypt trying modern and legacy variants
+     *
+     * @param {String} ciphertext Base64 encoded ciphertext to be decrypted.
+     * @param {String} password Password to use to decrypt ciphertext
+     * @returns {Promise<String>} Decrypted plaintext.
+     */
+    async autodecrypt(ciphertext, password) {
+        try {
+            return await this.decrypt(ciphertext, password);
+        } catch (e) {
+            //ignore
+        }
+        return await this.decrypt(ciphertext, password, true);
+    }
+
+    /**
      * Generate a random salt
      *
      * @return {Uint8Array}
