@@ -1,6 +1,14 @@
 // register toolbar button
 if (typeof window.toolbar !== 'undefined') {
     toolbar[toolbar.length] = {
+        type: 'format',
+        title: LANG.plugins.encryptedpasswords.addpass,
+        icon: DOKU_BASE + 'lib/plugins/encryptedpasswords/password.png',
+        open: '<encrypt>',
+        close: '</encrypt>',
+        sample: 'password',
+    };
+    toolbar[toolbar.length] = {
         type: 'encryptedPasswordsToggle',
         title: LANG.plugins.encryptedpasswords.decryptAll,
         icon: DOKU_BASE + 'lib/plugins/encryptedpasswords/encrypt.png',

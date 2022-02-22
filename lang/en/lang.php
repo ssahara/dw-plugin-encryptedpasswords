@@ -8,7 +8,7 @@ $lang['js']['failcount'] = '%d entries were not decrypted, wrong passsphrase?';
 $lang['js']['decryptAll'] = 'Decrypt all entries';
 $lang['js']['hideAll'] = 'Hide all entries';
 $lang['js']['copy'] = 'Copy to clipboard';
-
+$lang['js']['addpass'] = 'Add password';
 $lang['draftreplace'] = '[password removed from draft]';
 
 $lang['toolbar_icon_title'] = 'Encrypt or decrypt selected password';
