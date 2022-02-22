@@ -1,7 +1,7 @@
 base   encryptedpasswords
 name   Encrypted Passwords Plugin
-author Wolfgang Reszel
-email  reszel@werbeagentur-willers.de
-date   2020-11-02
+author Andreas Gohr
+email  dokuwiki@cosmocode.de
+date   2022-02-02
 desc   This plugin let you store 256 bit AES encrypted passwords in your DokuWiki pages. The password can be decrypted by clicking them (Javascript must be enabled).
 url    https://www.dokuwiki.org/plugin:encryptedpasswords
