@@ -13,12 +13,11 @@ class SubtleAES {
      * @param   {String} plaintext Plaintext to be encrypted
      * @param   {String} password Password to use to encrypt plaintext
      * @returns {Promise<String>} Encrypted ciphertext base64 encoded
-
      */
     async encrypt(plaintext, password) {
 
         const salt = this.randomSalt();
-        const {hash, iv} = await this.derivePkdf2(password, salt, 'SHA-256', this.iterations, 48);
+        const {hash, iv} = await this.derivePkdf2(password, salt, 'SHA-256', this.iterations);
 
         const alg = {name: 'AES-CBC', iv: iv};
         const key = await crypto.subtle.importKey('raw', hash, alg, false, ['encrypt']);
@@ -31,14 +30,20 @@ class SubtleAES {
     /**
      * Decrypts OpenSSL ciphertext
      *
-     * @param   {String} ciphertext Base64 encoded ciphertext to be decrypted.
-     * @param   {String} password Password to use to decrypt ciphertext
+     * @param {String} ciphertext Base64 encoded ciphertext to be decrypted.
+     * @param {String} password Password to use to decrypt ciphertext
+     * @param {boolean} legacy
      * @returns {Promise<String>} Decrypted plaintext.
      */
-    async decrypt(ciphertext, password) {
-
+    async decrypt(ciphertext, password, legacy = false) {
         const {salt, cipher} = this.parseOpenSSLCryptString(ciphertext);
-        const {hash, iv} = await this.derivePkdf2(password, salt, 'SHA-256', this.iterations, 48);
+
+        let hash, iv;
+        if (legacy) {
+            ({hash, iv} = this.deriveMd5(password, salt));
+        } else {
+            ({hash, iv} = await this.derivePkdf2(password, salt, 'SHA-256', this.iterations));
+        }
 
         const alg = {name: 'AES-CBC', iv: iv};
         const key = await crypto.subtle.importKey('raw', hash, alg, false, ['decrypt']);
@@ -104,7 +109,7 @@ class SubtleAES {
      * @param {Uint8Array} salt    The salt
      * @param {string} hash        The Hash model, e.g. ["SHA-256" | "SHA-512"]
      * @param {int} iterations     Number of iterations
-     * @return {Promise<{cipher: Uint8Array, salt: Uint8Array}>}
+     * @return {Promise<{hash: Uint8Array, iv: Uint8Array}>}
      * @link https://stackoverflow.com/q/67993979
      */
     async derivePkdf2(strPassword, salt, hash, iterations) {
@@ -129,5 +134,24 @@ class SubtleAES {
         }
     }
 
+    /**
+     * The old, legacy method to derive key and IV from the password
+     *
+     * @param {string} strPassword The clear text password
+     * @param {Uint8Array} salt The salt
+     * @return {{iv: Uint8Array, hash: Uint8Array}}
+     * @link https://security.stackexchange.com/a/242567
+     */
+    deriveMd5(strPassword, salt) {
+        const password = new TextEncoder().encode(strPassword);
 
+        const D1 = md5.array(new Uint8Array([...password, ...salt]));
+        const D2 = md5.array(new Uint8Array([...D1, ...password, ...salt]));
+        const D3 = md5.array(new Uint8Array([...D2, ...password, ...salt]));
+
+        return {
+            hash: new Uint8Array([...D1, ...D2]),
+            iv: new Uint8Array(D3),
+        }
+    }
 }
