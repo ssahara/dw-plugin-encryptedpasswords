@@ -38,7 +38,7 @@ class action_plugin_encryptedpasswords extends \dokuwiki\Extension\ActionPlugin
      */
     public function handleDraftSave(Doku_Event $event, $param)
     {
-        $re = '/<encrypt>.*?(<\/encrypt>)/';
+        $re = '/<encrypt>.*?(<\/encrypt>)/s';
         $repl = $this->getLang('draftreplace');
 
         $event->data['prefix'] = preg_replace($re, $repl, $event->data['prefix']);

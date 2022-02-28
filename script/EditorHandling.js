@@ -63,7 +63,7 @@ class EditorHandling {
      * @return {Promise<string>}
      */
     async decryptSyntax(text, passphrase) {
-        const re = new RegExp('<decrypt>(.*?)(<\/decrypt>)', 'g');
+        const re = new RegExp('<decrypt>(.*?)(<\/decrypt>)', 'gs');
 
         const matches = [...text.matchAll(re)];
 
@@ -93,7 +93,7 @@ class EditorHandling {
         const text = e.target.form.wikitext.value;
 
         // check if syntax contains clear text passwords
-        const re = new RegExp('<encrypt>.*?(<\/encrypt>)');
+        const re = new RegExp('<encrypt>.*?(<\/encrypt>)','s');
         if (
             !prefix.match(re) &&
             !suffix.match(re) &&
@@ -127,7 +127,7 @@ class EditorHandling {
      * @return {Promise<string>}
      */
     async encryptSyntax(text, passphrase) {
-        const re = new RegExp('<encrypt>(.*?)(<\/encrypt>)', 'g');
+        const re = new RegExp('<encrypt>(.*?)(<\/encrypt>)', 'gs');
 
         const matches = [...text.matchAll(re)];
 
